@@ -190,55 +190,62 @@ function countWords(text: string): number {
  */
 function validateFrontmatter(data: unknown): MDXFrontmatter {
   const validated: MDXFrontmatter = {};
+  
+  // Type guard to ensure data is an object
+  if (typeof data !== 'object' || data === null) {
+    return validated;
+  }
+  
+  const dataObj = data as Record<string, unknown>;
 
   // Basic string fields
-  if (data.title && typeof data.title === 'string') {
-    validated.title = data.title;
+  if (dataObj.title && typeof dataObj.title === 'string') {
+    validated.title = dataObj.title;
   }
-  if (data.description && typeof data.description === 'string') {
-    validated.description = data.description;
+  if (dataObj.description && typeof dataObj.description === 'string') {
+    validated.description = dataObj.description;
   }
-  if (data.author && typeof data.author === 'string') {
-    validated.author = data.author;
+  if (dataObj.author && typeof dataObj.author === 'string') {
+    validated.author = dataObj.author;
   }
-  if (data.category && typeof data.category === 'string') {
-    validated.category = data.category;
+  if (dataObj.category && typeof dataObj.category === 'string') {
+    validated.category = dataObj.category;
   }
-  if (data.image && typeof data.image === 'string') {
-    validated.image = data.image;
+  if (dataObj.image && typeof dataObj.image === 'string') {
+    validated.image = dataObj.image;
   }
-  if (data.slug && typeof data.slug === 'string') {
-    validated.slug = data.slug;
+  if (dataObj.slug && typeof dataObj.slug === 'string') {
+    validated.slug = dataObj.slug;
   }
 
   // Date field
-  if (data.date) {
-    const dateStr = typeof data.date === 'string' ? data.date : data.date.toString();
+  if (dataObj.date) {
+    const dateStr = typeof dataObj.date === 'string' ? dataObj.date : String(dataObj.date);
     validated.date = dateStr;
   }
 
   // Array fields
-  if (Array.isArray(data.tags)) {
-    validated.tags = data.tags.filter(tag => typeof tag === 'string');
+  if (Array.isArray(dataObj.tags)) {
+    validated.tags = dataObj.tags.filter((tag): tag is string => typeof tag === 'string');
   }
 
   // Enum fields
-  if (data.status && ['draft', 'published', 'archived'].includes(data.status)) {
-    validated.status = data.status;
+  if (dataObj.status && ['draft', 'published', 'archived'].includes(dataObj.status as string)) {
+    validated.status = dataObj.status as 'draft' | 'published' | 'archived';
   }
-  if (data.accessLevel && ['public', 'private', 'premium'].includes(data.accessLevel)) {
-    validated.accessLevel = data.accessLevel;
+  if (dataObj.accessLevel && ['public', 'private', 'premium'].includes(dataObj.accessLevel as string)) {
+    validated.accessLevel = dataObj.accessLevel as 'public' | 'private' | 'premium';
   }
 
   // Boolean fields
-  if (typeof data.featured === 'boolean') {
-    validated.featured = data.featured;
+  if (typeof dataObj.featured === 'boolean') {
+    validated.featured = dataObj.featured;
   }
 
   // Copy other custom fields
-  Object.keys(data).forEach(key => {
-    if (!(key in validated) && data[key] !== undefined) {
-      validated[key] = data[key];
+  Object.keys(dataObj).forEach(key => {
+    if (!(key in validated) && dataObj[key] !== undefined) {
+      validated[key] = dataObj[key];
     }
   });
 
