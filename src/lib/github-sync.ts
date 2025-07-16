@@ -170,7 +170,7 @@ export class GitHubSyncService {
   /**
    * Get all JSON settings files
    */
-  async getSettingsFiles(): Promise<Array<{ path: string; content: any; sha: string }>> {
+  async getSettingsFiles(): Promise<Array<{ path: string; content: unknown; sha: string }>> {
     try {
       const settingsDir = await this.getRepositoryContents('settings');
       const jsonFiles = settingsDir.filter(
@@ -270,7 +270,7 @@ export class GitHubSyncService {
           const key = file.path.replace('settings/', '').replace('.json', '');
           
           // Update or create setting
-          await updateSetting(key, file.content);
+          await updateSetting(key, JSON.stringify(file.content));
           console.log(`Updated setting: ${key}`);
           success++;
         } catch (error) {

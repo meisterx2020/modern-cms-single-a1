@@ -25,13 +25,13 @@ export function MDXContent({ content }: MDXContentProps) {
         let frontmatter = {};
         if (content.frontmatter) {
           try {
-            frontmatter = JSON.parse(content.frontmatter);
+            frontmatter = JSON.parse(typeof content.frontmatter === 'string' ? content.frontmatter : '{}');
           } catch (e) {
             console.warn('Failed to parse frontmatter:', e);
           }
         }
 
-        const mdxSource = await serialize(content.content, {
+        const mdxSource = await serialize(content.content_raw, {
           mdxOptions: {
             remarkPlugins: [],
             rehypePlugins: [],
@@ -94,8 +94,8 @@ export function MDXContent({ content }: MDXContentProps) {
           </p>
         )}
         <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-          <time dateTime={content.publishedAt?.toISOString() || content.createdAt.toISOString()}>
-            {content.publishedAt?.toLocaleDateString() || content.createdAt.toLocaleDateString()}
+          <time dateTime={content.created_at}>
+            {new Date(content.created_at).toLocaleDateString()}
           </time>
           <span className="capitalize">{content.status}</span>
         </div>

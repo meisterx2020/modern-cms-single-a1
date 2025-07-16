@@ -12,7 +12,7 @@ export const contents = sqliteTable('contents', {
   title: text('title').notNull(),
   description: text('description'),
   content_raw: text('content_raw').notNull(),
-  frontmatter: text('frontmatter', { mode: 'json' }).$type<Record<string, any>>(),
+  frontmatter: text('frontmatter', { mode: 'json' }).$type<Record<string, unknown>>(),
   status: text('status').$type<ContentStatus>().notNull().default('draft'),
   access_level: text('access_level').$type<AccessLevel>().notNull().default('public'),
   created_at: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
@@ -23,7 +23,7 @@ export const contents = sqliteTable('contents', {
 export const settings = sqliteTable('settings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   key: text('key').notNull().unique(),
-  value: text('value', { mode: 'json' }).$type<any>().notNull(),
+  value: text('value', { mode: 'json' }).$type<unknown>().notNull(),
   updated_at: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 

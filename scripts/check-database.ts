@@ -29,7 +29,7 @@ async function checkDatabase() {
       if (content.description) {
         console.log(`      Description: ${content.description}`);
       }
-      const frontmatter = JSON.parse(content.frontmatter || '{}');
+      const frontmatter = JSON.parse(typeof content.frontmatter === 'string' ? content.frontmatter : '{}');
       if (Object.keys(frontmatter).length > 0) {
         console.log(`      Frontmatter:`, Object.keys(frontmatter).join(', '));
       }
@@ -42,7 +42,7 @@ async function checkDatabase() {
     settings.forEach(setting => {
       console.log(`   🔧 ${setting.key}`);
       try {
-        const value = JSON.parse(setting.value);
+        const value = JSON.parse(typeof setting.value === 'string' ? setting.value : '{}');
         if (typeof value === 'object' && value !== null) {
           console.log(`      Keys: ${Object.keys(value).join(', ')}`);
         }

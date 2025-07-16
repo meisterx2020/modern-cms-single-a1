@@ -25,16 +25,17 @@ const mdxComponents = {
   img: CustomImage,
   
   // Code
-  pre: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => {
+  pre: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => {
     // Extract code from pre > code structure
-    const codeElement = children?.props?.children;
-    const className = children?.props?.className;
+    const childElement = children as React.ReactElement<{ children?: string; className?: string[] }>;
+    const codeElement = childElement?.props?.children;
+    const className = childElement?.props?.className;
     
     if (typeof codeElement === 'string') {
       return (
         <CodeBlock 
-          className={className}
-          language={className?.replace('language-', '')}
+          className={className?.join(' ')}
+          language={className?.find(cls => cls.startsWith('language-'))?.replace('language-', '')}
         >
           {codeElement}
         </CodeBlock>
@@ -46,24 +47,24 @@ const mdxComponents = {
   code: InlineCode,
   
   // Lists
-  ul: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  ul: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <ul className="mb-4 ml-6 list-disc space-y-1" {...props}>
       {children}
     </ul>
   ),
-  ol: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  ol: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <ol className="mb-4 ml-6 list-decimal space-y-1" {...props}>
       {children}
     </ol>
   ),
-  li: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  li: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <li className="text-gray-700 dark:text-gray-300" {...props}>
       {children}
     </li>
   ),
   
   // Blockquote
-  blockquote: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  blockquote: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <blockquote 
       className="border-l-4 border-blue-500 pl-4 my-4 italic text-gray-600 dark:text-gray-400"
       {...props}
@@ -73,36 +74,36 @@ const mdxComponents = {
   ),
   
   // Tables
-  table: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  table: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <div className="my-6 overflow-x-auto">
       <table className="w-full border-collapse border border-gray-300 dark:border-gray-700" {...props}>
         {children}
       </table>
     </div>
   ),
-  thead: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  thead: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <thead className="bg-gray-50 dark:bg-gray-800" {...props}>
       {children}
     </thead>
   ),
-  tr: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  tr: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <tr className="border-b border-gray-300 dark:border-gray-700" {...props}>
       {children}
     </tr>
   ),
-  th: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  th: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <th className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-gray-100" {...props}>
       {children}
     </th>
   ),
-  td: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => (
+  td: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
     <td className="px-4 py-2 text-gray-700 dark:text-gray-300" {...props}>
       {children}
     </td>
   ),
   
   // Horizontal rule
-  hr: (props: { [key: string]: any }) => (
+  hr: (props: { [key: string]: unknown }) => (
     <hr className="my-8 border-gray-300 dark:border-gray-700" {...props} />
   ),
 };

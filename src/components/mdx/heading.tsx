@@ -9,7 +9,7 @@ interface HeadingProps {
 }
 
 export function Heading({ level, children, id, className }: HeadingProps) {
-  const Component = `h${level}` as keyof JSX.IntrinsicElements;
+  const Component = `h${level}` as keyof React.JSX.IntrinsicElements;
   
   const baseClasses = {
     1: 'text-4xl font-bold tracking-tight lg:text-5xl mb-6',

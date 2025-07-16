@@ -43,7 +43,7 @@ export async function generateMetadata(
     let frontmatter = {};
     if (content.frontmatter) {
       try {
-        frontmatter = JSON.parse(content.frontmatter);
+        frontmatter = JSON.parse(typeof content.frontmatter === 'string' ? content.frontmatter : '{}');
       } catch (e) {
         console.warn('Failed to parse frontmatter for metadata:', e);
       }
@@ -56,15 +56,15 @@ export async function generateMetadata(
         title: content.title,
         description: content.description || 'Content from our CMS',
         type: 'article',
-        publishedTime: content.publishedAt?.toISOString(),
-        modifiedTime: content.updatedAt.toISOString(),
-        ...(frontmatter as Record<string, any>)?.openGraph,
+        publishedTime: content.created_at,
+        modifiedTime: content.updated_at,
+        ...((frontmatter as Record<string, unknown>)?.openGraph as Record<string, unknown> || {}),
       },
       twitter: {
         card: 'summary_large_image',
         title: content.title,
         description: content.description || 'Content from our CMS',
-        ...(frontmatter as Record<string, any>)?.twitter,
+        ...((frontmatter as Record<string, unknown>)?.twitter as Record<string, unknown> || {}),
       },
     };
   } catch (error) {

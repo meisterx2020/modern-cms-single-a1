@@ -1,5 +1,5 @@
 import { db } from './index';
-import { contents, settings, type Content, type NewContent, type Setting, type NewSetting } from './schema';
+import { contents, settings, type Content, type NewContent, type Setting, type NewSetting, type ContentStatus } from './schema';
 import { eq, desc } from 'drizzle-orm';
 
 // Content CRUD operations
@@ -15,13 +15,14 @@ export async function getContentBySlug(slug: string): Promise<Content | null> {
 
 export async function getAllContents(status?: string): Promise<Content[]> {
   try {
-    let query = db.select().from(contents).orderBy(desc(contents.updatedAt));
-    
     if (status) {
-      query = query.where(eq(contents.status, status));
+      return await db.select().from(contents)
+        .where(eq(contents.status, status as ContentStatus))
+        .orderBy(desc(contents.updated_at));
     }
     
-    return await query;
+    return await db.select().from(contents)
+      .orderBy(desc(contents.updated_at));
   } catch (error) {
     console.error('Error fetching all contents:', error);
     throw new Error('Failed to fetch contents');
@@ -86,32 +87,22 @@ export async function getSetting(key: string): Promise<Setting | null> {
   }
 }
 
-export async function getAllSettings(category?: string): Promise<Setting[]> {
+export async function getAllSettings(): Promise<Setting[]> {
   try {
-    let query = db.select().from(settings).orderBy(settings.category, settings.key);
-    
-    if (category) {
-      query = query.where(eq(settings.category, category));
-    }
-    
-    return await query;
+    return await db.select().from(settings).orderBy(settings.key);
   } catch (error) {
     console.error('Error fetching all settings:', error);
     throw new Error('Failed to fetch settings');
   }
 }
 
-export async function updateSetting(key: string, value: string, type?: string): Promise<Setting | null> {
+export async function updateSetting(key: string, value: string): Promise<Setting | null> {
   try {
     const now = new Date();
     const updates: Partial<NewSetting> = {
       value,
-      updatedAt: now,
+      updated_at: now.toISOString(),
     };
-    
-    if (type) {
-      updates.type = type;
-    }
     
     const result = await db
       .update(settings)
@@ -143,19 +134,16 @@ export async function createSetting(setting: NewSetting): Promise<Setting> {
   }
 }
 
-export async function upsertSetting(key: string, value: string, type: string = 'string', description?: string, category?: string): Promise<Setting> {
+export async function upsertSetting(key: string, value: string): Promise<Setting> {
   try {
     const existing = await getSetting(key);
     
     if (existing) {
-      return await updateSetting(key, value, type) as Setting;
+      return await updateSetting(key, value) as Setting;
     } else {
       return await createSetting({
         key,
         value,
-        type,
-        description,
-        category: category || 'general',
       });
     }
   } catch (error) {

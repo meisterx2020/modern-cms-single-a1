@@ -145,10 +145,10 @@ async function processPullRequestEvent(tenantId: string, payload: GitHubWebhookP
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { tenantId: string } }
+  { params }: { params: Promise<{ tenantId: string }> }
 ) {
   try {
-    const tenantId = params.tenantId;
+    const { tenantId } = await params;
     
     // Validate tenant ID (basic validation)
     if (!tenantId || tenantId.length < 3) {
@@ -159,7 +159,7 @@ export async function POST(
     }
 
     // Get headers
-    const headersList = headers();
+    const headersList = await headers();
     const githubEvent = headersList.get('x-github-event');
     const githubSignature = headersList.get('x-hub-signature-256');
     const githubDelivery = headersList.get('x-github-delivery');

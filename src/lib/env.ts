@@ -22,16 +22,16 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
   // Content
-  CONTENT_PREVIEW_MODE: z.string().transform(val => val === 'true').default('true'),
-  ENABLE_DRAFT_CONTENT: z.string().transform(val => val === 'true').default('true'),
+  CONTENT_PREVIEW_MODE: z.string().default('true').transform(val => val === 'true'),
+  ENABLE_DRAFT_CONTENT: z.string().default('true').transform(val => val === 'true'),
 
   // Performance
-  REVALIDATE_TIME: z.string().transform(Number).pipe(z.number().positive()).default('60'),
-  CACHE_STATIC_CONTENT: z.string().transform(val => val === 'true').default('true'),
+  REVALIDATE_TIME: z.string().default('60').transform(Number).pipe(z.number().positive()),
+  CACHE_STATIC_CONTENT: z.string().default('true').transform(val => val === 'true'),
 
   // Security
   ALLOWED_ORIGINS: z.string().optional(),
-  RATE_LIMIT_ENABLED: z.string().transform(val => val === 'true').default('false'),
+  RATE_LIMIT_ENABLED: z.string().default('false').transform(val => val === 'true'),
 
   // Optional services
   ANALYTICS_ID: z.string().optional(),
@@ -52,7 +52,7 @@ function validateEnv(): Env {
     return parsed;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const missingVars = error.errors.map(err => {
+      const missingVars = error.issues.map(err => {
         return `${err.path.join('.')}: ${err.message}`;
       });
 

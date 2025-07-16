@@ -18,7 +18,7 @@ export interface MDXFrontmatter {
   featured?: boolean;
   image?: string;
   slug?: string;
-  [key: string]: any; // Allow custom fields
+  [key: string]: unknown; // Allow custom fields
 }
 
 // Parsed MDX content structure
@@ -85,11 +85,11 @@ async function getShikiHighlighter(): Promise<Highlighter> {
  */
 function createShikiRehypePlugin() {
   return function rehypeShiki() {
-    return async (tree: any) => {
+    return async (tree: unknown) => {
       const { visit } = await import('unist-util-visit');
       const promises: Promise<void>[] = [];
 
-      visit(tree, 'element', (node: any) => {
+      visit(tree as any, 'element', (node: any) => {
         if (node.tagName === 'code' && node.properties?.className) {
           const className = node.properties.className;
           const languageMatch = className.find((cls: string) => cls.startsWith('language-'));
@@ -188,7 +188,7 @@ function countWords(text: string): number {
 /**
  * Validate frontmatter data
  */
-function validateFrontmatter(data: any): MDXFrontmatter {
+function validateFrontmatter(data: unknown): MDXFrontmatter {
   const validated: MDXFrontmatter = {};
 
   // Basic string fields
