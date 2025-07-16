@@ -113,3 +113,4 @@ description: "トップページです。"
 
 - Next.js 15
 - TailwindCSS v4
+- Shadcn/UI

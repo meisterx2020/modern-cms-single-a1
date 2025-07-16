@@ -1,0 +1,139 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Drizzle ORMとデータベース環境のセットアップ",
+        "description": "Drizzle ORMとLibSQL clientをインストールし、Tursoデータベースとの接続を確立する",
+        "details": "drizzle-orm@^0.33.0と@libsql/client@^0.12.0をインストール。drizzle.config.tsを作成し、TURSO_DATABASE_URLとTURSO_AUTH_TOKENを.env.localに設定。src/lib/db/index.tsでデータベース接続を実装。",
+        "testStrategy": "データベース接続テストを実行し、Tursoへの接続が正常に確立されることを確認",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "データベーススキーマ定義とマイグレーション",
+        "description": "contentsテーブルとsettingsテーブルのスキーマを定義し、マイグレーションを作成する",
+        "details": "src/lib/db/schema.tsにcontents（id, slug, title, description, content_raw, frontmatter, status, access_level, created_at, updated_at）とsettings（id, key, value, updated_at）テーブルを定義。drizzle-kit generateでマイグレーション作成し、drizzle-kit pushで適用。",
+        "testStrategy": "マイグレーション適用後、テーブル構造がスキーマ通りに作成されていることをデータベースで確認",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "データベースクエリ関数の実装",
+        "description": "コンテンツとセッティングの基本的なCRUD操作を実装する",
+        "details": "src/lib/db/queries.tsにgetContentBySlug, getAllContents, updateContent, createContent, getSettings, updateSettingsの関数を実装。TypeScript型安全性を確保し、エラーハンドリングを含める。",
+        "testStrategy": "各クエリ関数のユニットテストを作成し、データベース操作が正常に動作することを確認",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "GitHub Webhook APIエンドポイント実装",
+        "description": "GitHub WebhookイベントをAI受信し、署名検証を行うAPIエンドポイントを作成する",
+        "details": "src/app/api/webhooks/github/[tenantId]/route.tsを作成。crypto.timingSafeEqualでGitHub signature検証を実装。push、pull_requestイベントでrepository.default_branchの変更を検知。GITHUB_WEBHOOK_SECRETを環境変数で設定。",
+        "testStrategy": "GitHub Webhookシミュレーターまたはngrokを使用して実際のWebhookイベントを送信し、署名検証と処理が正常に動作することを確認",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "GitHub API連携とファイル同期システム",
+        "description": "GitHubリポジトリからMDXファイルを取得し、変更を検知する機能を実装する",
+        "details": "src/lib/github-sync.tsを実装。GitHub REST API v4を使用してcontents/*.mdxとsettings/*.jsonファイルを取得。GITHUB_PATでの認証、ファイル差分検知、Base64デコード処理を含める。レート制限対応も実装。",
+        "testStrategy": "実際のGitHubリポジトリ（modern-cms-single-c1）からファイル取得テストを実行し、MDXとJSONファイルが正常に読み込まれることを確認",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "MDXパーサーとfrontmatter処理システム",
+        "description": "MDXファイルのfrontmatter解析とコンテンツ処理機能を実装する",
+        "details": "gray-matter@^4.0.3を使用してfrontmatter解析を実装。@next/mdx@^15.0.0でMDXコンパイル、remark@^15.0.0、rehype@^13.0.0でプラグイン処理。src/lib/mdx-parser.tsでparseMDXFile関数を作成。",
+        "testStrategy": "サンプルMDXファイルでfrontmatter抽出とコンテンツ変換が正常に動作することを確認。日本語コンテンツも含めてテスト",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "シンタックスハイライトとカスタムMDXコンポーネント",
+        "description": "コードブロックのシンタックスハイライトとMDX用カスタムコンポーネントを実装する",
+        "details": "shiki@^1.0.0でシンタックスハイライトを実装。src/components/mdx/に見出し、段落、リンク、画像、コードブロック用コンポーネントを作成。TailwindCSS v4でスタイリング。MDXProviderでコンポーネントマッピング設定。",
+        "testStrategy": "JavaScript、TypeScript、JSON等の各言語でコードブロックが正しくハイライトされ、カスタムコンポーネントが正常にレンダリングされることを確認",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "動的ルーティングとコンテンツ表示ページ",
+        "description": "slugベースの動的ルーティングでMDXコンテンツを表示するページを実装する",
+        "details": "src/app/[...slug]/page.tsxでcatch-all動的ルーティングを実装。generateStaticParamsでISR対応。notFound()で404処理。MDXContentコンポーネントでコンテンツレンダリング。メタデータAPI対応。",
+        "testStrategy": "index.mdx（トップページ）とブログ記事2件が正常に表示されることを確認。存在しないslugで404が返されることをテスト",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "レイアウトとナビゲーションシステム",
+        "description": "共通レイアウトとsettingsテーブルベースのナビゲーションを実装する",
+        "details": "src/app/layout.tsxでアプリケーション共通レイアウトを実装。navigation.jsonからナビゲーション設定を読み込み、ヘッダー・フッターコンポーネントを作成。TailwindCSS v4でレスポンシブデザイン対応。",
+        "testStrategy": "navigation.jsonの設定に基づいてナビゲーションメニューが正しく表示され、各リンクが適切なページに遷移することを確認",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "環境設定と統合テスト",
+        "description": "本番環境設定を行い、GitHub→Webhook→Database→表示の全体フローをテストする",
+        "details": "GITHUB_PAT、TURSO_DATABASE_URL、TURSO_AUTH_TOKEN、GITHUB_WEBHOOK_SECRETを.env.localに設定。GitHubリポジトリのWebhook設定を行い、エンドツーエンドテストを実行。本番デプロイメント準備。",
+        "testStrategy": "GitHubでMDXファイルを更新し、Webhookが発火してデータベースが更新され、Webサイトで変更が反映されることを確認。トップページとブログ記事2件の表示動作を最終確認",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-16T02:57:11.573Z",
+      "updated": "2025-07-16T02:57:11.573Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
