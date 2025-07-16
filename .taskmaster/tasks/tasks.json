@@ -9,7 +9,7 @@
         "testStrategy": "データベース接続テストを実行し、Tursoへの接続が正常に確立されることを確認",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -22,7 +22,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -35,7 +35,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -48,7 +48,7 @@
         "dependencies": [
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -61,7 +61,7 @@
         "dependencies": [
           4
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -74,7 +74,7 @@
         "dependencies": [
           5
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -87,7 +87,7 @@
         "dependencies": [
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -100,7 +100,7 @@
         "dependencies": [
           7
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -113,7 +113,7 @@
         "dependencies": [
           8
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -126,13 +126,13 @@
         "dependencies": [
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-16T02:57:11.573Z",
-      "updated": "2025-07-16T02:57:11.573Z",
+      "updated": "2025-07-16T03:22:15.572Z",
       "description": "Tasks for master context"
     }
   }

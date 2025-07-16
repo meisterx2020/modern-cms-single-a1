@@ -1,0 +1,31 @@
+{
+  "task5_github_api": {
+    "description": "GitHub API Integration - No additional runtime dependencies needed",
+    "dependencies": {},
+    "devDependencies": {},
+    "notes": "Uses built-in fetch API and Node.js Buffer for Base64 decoding"
+  },
+  "task6_mdx_processing": {
+    "description": "MDX Parser and Frontmatter Processing",
+    "dependencies": {
+      "gray-matter": "^4.0.3",
+      "@next/mdx": "^15.0.0", 
+      "remark": "^15.0.0",
+      "rehype": "^13.0.0",
+      "remark-gfm": "^4.0.0"
+    },
+    "devDependencies": {},
+    "notes": "gray-matter for frontmatter parsing, @next/mdx for MDX compilation, remark/rehype for markdown processing"
+  },
+  "optional_enhancements": {
+    "description": "Optional packages for enhanced functionality",
+    "dependencies": {
+      "remark-reading-time": "^2.0.1",
+      "rehype-highlight": "^7.0.0",
+      "rehype-slug": "^6.0.0",
+      "rehype-autolink-headings": "^7.0.0"
+    },
+    "notes": "For reading time estimation, syntax highlighting, heading anchors"
+  },
+  "installation_command": "npm install gray-matter@^4.0.3 @next/mdx@^15.0.0 remark@^15.0.0 rehype@^13.0.0 remark-gfm@^4.0.0"
+}
